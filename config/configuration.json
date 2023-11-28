@@ -1,0 +1,18 @@
+{
+	"MAX_THREADS_PROCESS": 6,
+	"LOAD_TYPE": "INCREMENTAL",
+	"CONFIG_FILE_DIR": "/config/",
+	"LOG_BASE_DIR": "/log/",
+	"LOG_MAIN_FILE_NAME_FORMAT": "%Y%m%d%H%M",
+	"EMAIL_SMTP_SERVER_HOST": "192.168.168.101",
+	"EMAIL_SMTP_SERVER_PORT": 25,
+	"EMAIL_SENDER_EMAIL_ID": "biz@fcm-dev.bizmetric.com",
+	"EMAIL_RECEIVER_EMAIL_ID": [
+		"ajith.kumaraiah@bizmetric.com",
+		"nehali.surve@bizmetric.com",
+		"john.vimrish@bizmetric.com",
+		"ashok.paramasivam@bizmetric.com"
+	],
+	"EMAIL_SUBJECT": "ETL FULL Load {} .",
+	"WAIT_MINUTES_NO_REQUEST": 5
+}

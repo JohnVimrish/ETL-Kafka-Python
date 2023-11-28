@@ -1,0 +1,12 @@
+{
+    "KAFKA_BOOTSTRAP_SERVERS": "localhost: 9092",
+    "DEFAULT_CONSUMER_GROUP_ID": "kafka-consumer-group",
+    "SESSION_TIMEOUT_INMS": 6000,
+    "DEFAULT_OFFSET_RESET": "earliest",
+    "EXCLUDE_TOPICS": ["DESKTOP-TNM4E66", "__consumer_offsets", "oracle_cdc_topic","kafkapoc_oracletopostgres"],
+    "PROCESSING_TIME_FOR_EACH_TOPIC_INMS": 100,
+    "CONSUMER_CONSUMING_TIMEOUT_INMS": 50,
+    "ENABLE_AUTO_COMMIT": false ,
+    "MAX_POLL_INTERVAL_INMS" :300000,
+    "CONSUMER_LIVE_STATUS_INTERVAL_INS":40
+}
