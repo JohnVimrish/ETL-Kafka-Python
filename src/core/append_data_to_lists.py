@@ -1,7 +1,3 @@
-import class_definition as c_d
-
-
-
 contacts_insert_tuples    = list()
 countries_insert_tuples   = list()
 customers_insert_tuples   = list()
