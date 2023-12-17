@@ -44,6 +44,7 @@ class ConfigParametersValue():
         cls.consumer_live_status_interval_ins               = kafka_config_obj.json_val(JsonTagVariables.consumer_live_status_interval_ins)
         cls.message_wait_exaust_interval_ins                = kafka_config_obj.json_val(JsonTagVariables.message_wait_exaust_interval_ins)
         cls.kafka_message_poll_wait_inms                    = kafka_config_obj.json_val(JsonTagVariables.kafka_message_poll_wait_inms)
+        cls.kafka_insert_batch_number                       = kafka_config_obj.json_val(JsonTagVariables.kafka_insert_batch_number)
 
 class TableConfigParametersValue():
 

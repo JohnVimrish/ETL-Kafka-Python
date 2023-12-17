@@ -50,44 +50,35 @@ class PostgresConnection():
 
     def __upsert_data(self, 
                     write_inputs,
-                    write_query,
-                    write_bacthes_size,
-                    src_batch_num):
+                    write_query):
 
-        self.pg_logger.debug(f'Source Batch Number: {src_batch_num} write starts at {dt.now()}')
+        self.pg_logger.debug(f'Upsert data  write starts at {dt.now()}')
 
         ex.execute_values(  self.cursor_object, 
                             write_query,
                             write_inputs,
                             template=None,
-                            page_size=write_bacthes_size,
+                            page_size=5,
                             fetch=False)
         written_records_count = self.get_curr_exec_rowcount()
         self.write_row_count += written_records_count
         
         self.pg_logger.info(f'Number of Rows written :{written_records_count}')
-        self.pg_logger.debug(f'Source Batch Number: {src_batch_num} write ends at {dt.now()}')
 
     def upsert_data_in_batches(self,
                                 input_data,
-                                write_query,
-                                batch_size,
-                                src_batch_num):
+                                write_query):
         try:
             try:
-                self.upsert_data(input_data,
-                                    write_query,
-                                    batch_size,
-                                    src_batch_num)
+                self.__upsert_data(input_data,
+                                    write_query)
               
             except (Exception, db_error) as err:
                     if str(err) == 'A string literal cannot contain NUL (0x00) characters.':
                         try:
                             fixed_data = self.__remove_ascii_zero_char(input_data)
                             self.__upsert_data(   fixed_data,
-                                                write_query,
-                                                batch_size,
-                                                src_batch_num)
+                                                write_query)
                         except (Exception, db_error) as error:
                             self.log_and_close(
                                 'Error  has occured while  executing the source results on  Target DB {}.', err)

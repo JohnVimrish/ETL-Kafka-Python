@@ -53,6 +53,7 @@ class JsonTagVariables():
     consumer_live_status_interval_ins ='CONSUMER_LIVE_STATUS_INTERVAL_INS'
     message_wait_exaust_interval_ins ='MESSAGE_WAIT_EXAUST_INTERVAL_INS'
     kafka_message_poll_wait_inms= 'KAFKA_MESSAGE_POLL_WAIT_INMS'
+    kafka_insert_batch_number = 'KAFKA_INSERT_BATCH_NUMBER'
     group_id  = 'group.id'
     auto_offset_reset = 'auto.offset.reset'
 

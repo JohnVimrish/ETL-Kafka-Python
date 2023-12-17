@@ -64,42 +64,6 @@ class SQLExecution():
                 error_dict[CommonVariables.num_of_rows_processed] = 0
                 return  error_dict
 
-            def __concatenate_sql(self, concat_variable_first, concat_variable_sec):
-                for string in concat_variable_first:  
-                    first_half_string = string
-                for string in concat_variable_sec: 
-                    second_half_string = string
-                return [' '.join([first_half_string, second_half_string])]
-
-            def __execute_dft_queries(self, 
-                                    rearrage_csv_columns,
-                                    target_executable_sql, 
-                                    read_batch_num, 
-                                    write_batch_num, 
-                                    tgt_connection_obj):
-
-                    for value in target_executable_sql:
-                        execute_query = value
-                    total_src_rows  = 0
-                    for csv_list in self.process_csvlist_based_ontables :
-                        self.SqlExecutionLogger.info(f'Execution of source  csv : {csv_list},read_time  start time {dt.now()}')              
-                        readcsvfileNbatches = CSVUtility.read_csv_as_batches(csv_list,read_batch_num,self.SqlExecutionLogger,self.ObjTableConfiguration.data_flow_task_src_csv_dtypes)
-                        self.SqlExecutionLogger.info(f'Execution of source  csv : {csv_list},read_time  end time {dt.now()}')
-                        batch_count = 0
-                        for  csv_batches in readcsvfileNbatches :
-                                self.SqlExecutionLogger.debug(f'Batch Number :{batch_count} column rearrange and conversion to tupple array starts at {dt.now()}')
-                                total_src_rows +=CSVUtility.get_dataframe_row_count(csv_batches)
-                                source_batch_result = CSVUtility.rearrange_columns_and_convert_to_tuple_array(
-                                    csv_batches,rearrage_csv_columns,self.SqlExecutionLogger)
-                                self.SqlExecutionLogger.debug( f'Batch Number :{batch_count} column rearrange and conversion to tupple array ends at {dt.now()}')
-                                tgt_connection_obj.upsert_data_in_batches(source_batch_result, execute_query, write_batch_num, batch_count)
-                                self.SqlExecutionLogger.debug( f'Current Batch records are successfully  uploaded to target table in DB {dt.now()}')
-                                batch_count += 1
-                    
-                    total_tgt_rows = tgt_connection_obj.get_full_write_row_count()
-                    return total_src_rows, total_tgt_rows
-
-
             def __execute_queries_log(  self, 
                                     activity, 
                                     sql_list):
@@ -148,41 +112,47 @@ class SQLExecution():
                         self.__execute_queries_log(activity, drop_indexes_inc_sql)
 
             def __data_flow_task(self, 
-                                table_name):
+                                insert_data):
+                
+
+                def execute_dft_queries(
+                                    rearrange_csv_columns,
+                                    input_data, 
+                                    target_executable_sql):
+
+                    for value in target_executable_sql:
+                        execute_query = value
+                    total_src_rows  = len(input_data)
+                    self.SqlExecutionLogger.debug(f'column rearrange and conversion to tupple array starts at {dt.now()}')
+                    input_data_rearranged = list()
+                    for each_dict in input_data  :
+                        rearranged_insert_tuple  = list()
+                        for column_name in rearrange_csv_columns:
+                            rearranged_insert_tuple.append(each_dict[column_name])
+                        input_data_rearranged.append(tuple(rearranged_insert_tuple))
+                    self.SqlExecutionLogger.debug( f'column rearrange and conversion to tupple array ends at {dt.now()}')
+                    self.tgt_connection_obj.upsert_data_in_batches(input_data_rearranged, execute_query)
+                    self.SqlExecutionLogger.debug( f'Current Batch records are successfully  uploaded to target table in DB {dt.now()}')
+                    
+                    total_tgt_rows = self.tgt_connection_obj.get_full_write_row_count()
+                    return total_src_rows, total_tgt_rows
 
                 FULL=CommonVariables.full_load_type
                 INCREMENTAL=CommonVariables.inc_load_type
-                
-                process_csv_rearrage_column_tmp = self.ObjTableConfiguration.dft_source_csv_columns
-                inc_target_upser_sql_tmp = self.ObjTableConfiguration.dft_insert_target_inc_sql
-                source_read_batch = self.ObjTableConfiguration.dft_read_csv_batches_count
-                target_write_batch = self.ObjTableConfiguration.dft_write_target_batches_count 
 
-                perform_transform_target =  self.ObjTableConfiguration.dft_perform_target_transf 
-                process_csv_rearrage_column = process_csv_rearrage_column_tmp if process_csv_rearrage_column_tmp else []
-                full_target_insert_sql = self.ObjTableConfiguration.dft_insert_target_full_sql
-                increment_target_upsert_sql = inc_target_upser_sql_tmp if inc_target_upser_sql_tmp else []
-
+                process_csv_rearrage_column = self.ObjTableConfiguration.dft_source_csv_columns
+                insert_sql = self.ObjTableConfiguration.dft_insert_sql
                 self.SqlExecutionLogger.info(f'DFT Load Type  : {self.load_type}')
-                self.SqlExecutionLogger.info(f'Read Batches Count  : {source_read_batch}')
-                self.SqlExecutionLogger.info(f'Write Batches Count  : {target_write_batch}')
-                self.SqlExecutionLogger.info(f"Full Load Target Execute SQL : {''.join(full_target_insert_sql)}")
-                self.SqlExecutionLogger.info(f"Increment Load Target Execute SQL : {''.join(increment_target_upsert_sql)}")
-                self.SqlExecutionLogger.info(f'Insert into {table_name} starts at {dt.now()},with Perform Transform Target as {perform_transform_target}')
+                self.SqlExecutionLogger.info(f"Target Execute SQL : {''.join(insert_sql)}")
 
-                insert_sql = full_target_insert_sql  if self.load_type == FULL else increment_target_upsert_sql
-
-                rowswritten = self.__execute_dft_queries(
+                rowswritten = self.execute_dft_queries(
                                                         process_csv_rearrage_column,
-                                                        insert_sql,
-                                                        source_read_batch,
-                                                        target_write_batch
+                                                        insert_data,
+                                                        insert_sql
                                                         )
                 tgt_row_count = rowswritten[1]
                 self.SqlExecutionLogger.info(f'Target Row count :{tgt_row_count}')
-                self.SqlExecutionLogger.info(f'Insert with  {self.load_type} into {table_name} ends at {dt.now()}')
-                self.ObjTableConfiguration.Update_Table_config_wLast_refresh_date()
-                self.SqlExecutionLogger.info('Table Config Json has been updated with Last refresh date.')
+                self.SqlExecutionLogger.info(f'Insert with  {self.load_type} into {self.table_name} ends at {dt.now()}')
 
                 return tgt_row_count
 

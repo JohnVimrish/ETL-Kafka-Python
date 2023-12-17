@@ -54,7 +54,7 @@ class Kafka_CDC_Consumer():
             except kafka_error.KafkaError as error_message:
                   self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error_message)
 
-    def __process_messages_from_topics(self,batch_interval_seconds,insert_batc_interval:int, poll_timeout:int):
+    def __process_messages_from_topics(self,batch_interval_seconds,kafka_message_wait_interval:int, poll_timeout:int,kafka_insert_batch_limit:int):
             
             def insert_data_to_var ( message,insert_var:list,delete_list:list) :
                 message_operation = message['payload']['op']
@@ -71,7 +71,7 @@ class Kafka_CDC_Consumer():
                     # Commit the offsets if necessary
                     self.kafka_consumer_client.commit()
                     message_status = CommonVariables.successfull_load
-                return message_status
+                return message_status,list(),list()
                 
             start_time  = dt.now()
             waiting_time  = dt.now()
@@ -87,8 +87,8 @@ class Kafka_CDC_Consumer():
                             # Poll for messages
                             message = self.kafka_consumer_client.poll(timeout=poll_timeout)  # Adjust timeout as needed based on waiting time needed to acquire message 
                             if message is None :
-                                if time.time() - waiting_time.timestamp() >= batch_interval_seconds:
-                                    message_status = process_insertion_of_data(insert_data,delete_data)
+                                if time.time() - waiting_time.timestamp() >= kafka_message_wait_interval:
+                                    message_status,insert_data,delete_data = process_insertion_of_data(insert_data,delete_data)
                                     break
                                 if waiting_counter == 0 :
                                      waiting_time  = dt.now()
@@ -102,8 +102,8 @@ class Kafka_CDC_Consumer():
                                     break 
                                 else :
                                     insert_data,delete_data = insert_data_to_var(message.value(),insert_data,delete_data)
-                                    if insert_batc_interval == len(insert_data):                                         
-                                       message_status  = process_insertion_of_data(insert_data,delete_data)
+                                    if kafka_insert_batch_limit == len(insert_data):                                         
+                                       message_status,insert_data,delete_data  = process_insertion_of_data(insert_data,delete_data)
                                        if message_status == CommonVariables.successfull_load :
                                             waiting_counter =  0 
                                        else :
@@ -138,7 +138,9 @@ class Kafka_CDC_Consumer():
                     if self.Database_Task_Executor._initialise_database_etl(self.load_type,DatabaseObj) is None :
                         if self.Database_Task_Executor.execute_pre_trigger_task() is None :
                             if  self.__process_messages_from_topics(batch_interval_seconds,
-                                    ConfigParametersValue.message_wait_exaust_interval_ins,ConfigParametersValue.kafka_message_poll_wait_inms) == CommonVariables.successfull_load :
+                                    ConfigParametersValue.message_wait_exaust_interval_ins,
+                                    ConfigParametersValue.kafka_message_poll_wait_inms,
+                                    ConfigParametersValue.kafka_insert_batch_number) == CommonVariables.successfull_load :
                                 if self.Database_Task_Executor.execute_post_trigger_task()  is None :
                                     self.ConsumerLoadStatus = self.Database_Task_Executor.load_plan_status()[CommonVariables.result_of_load]
                                 else:
