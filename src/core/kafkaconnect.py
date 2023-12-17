@@ -99,7 +99,8 @@ class Kafka_CDC_Consumer():
                     else :
                          self.ConsumerLoadStatus = CommonVariables.successfull_load 
                          continue 
-                
+                        # starts executing tasks from packages
+
             except Exception as error  :
                     self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error)
                     self.ConsumerLoadStatus = CommonVariables.failed_load 
@@ -108,3 +109,9 @@ class Kafka_CDC_Consumer():
 
     def close_consumer(self):
         self.kafka_consumer_client.close()
+
+''''
+In Consume messages try to include three functions  
+1.to execute the pre trigger task 
+2.Perform DFT
+3.Perform Post trigger task '''

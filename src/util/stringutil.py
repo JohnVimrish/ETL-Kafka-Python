@@ -9,3 +9,9 @@ class StringUtility () :
     @staticmethod
     def derive_table_config_actual_directory (to_concat_path,json_file) :
         return CommonVariables.etl_project_directory  + to_concat_path + json_file
+
+    @staticmethod
+    # Python code to merge dict using update() method
+    def merge_dict(dict1:dict, dict2:dict):
+        return(dict1.update(dict2))
+ 
