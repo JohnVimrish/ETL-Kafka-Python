@@ -230,17 +230,17 @@ class SQLExecution():
                      return StringUtility.merge_dict(self.output_dict,self.__exception_raiser(Error_Content))
                 
 
-            def execute_data_flow_task(self) : 
+            def execute_data_flow_task(self,insert_data:list) : 
                 try :
                     self.SqlExecutionLogger.info( f'Steps under Data Flow task will be  Executed')
                     if self.tgt_connection_obj.cursor_status()   : 
-                        self.output_dict[CommonVariables.num_of_rows_processed] = self.__data_flow_task()
+                        self.output_dict[CommonVariables.num_of_rows_processed] = self.__data_flow_task(insert_data)
                     else :
                         self.SqlExecutionLogger.info( f'cannot perform Data Flow task as database cursor as closed in  Pre Trigger task .') 
                 except Exception as Error_Content:
                      return StringUtility.merge_dict(self.output_dict,self.__exception_raiser(Error_Content))
 
-            def execute_delete_task(self, delete_records) : 
+            def execute_delete_task(self, delete_records:list) : 
                 try :
                     self.SqlExecutionLogger.info( f'Steps under Delete task will be  Executed')
                     if self.tgt_connection_obj.cursor_status()   : 
@@ -260,6 +260,17 @@ class SQLExecution():
                             self.SqlExecutionLogger.info( f'cannot perform Post Trigger Task  as database cursor as closed in  Data Flow task .') 
                 except Exception as Error_Content:
                      return StringUtility.merge_dict(self.output_dict,self.__exception_raiser(Error_Content))
+                
+            def execute_dft_delete_task(self, insert_data,delete_data) :
+                try :
+                    if self.execute_data_flow_task(insert_data) is  None :
+                        return self.execute_delete_task(delete_data)
+                except Exception as Error_Content:
+                     return StringUtility.merge_dict(self.output_dict,self.__exception_raiser(Error_Content))
+
+                
+            def release_acquired_db_connection (self) :
+                self.tgt_connection_obj.release_connection()
 
             def load_plan_status(self):
                 output_result = dict() 
@@ -269,6 +280,6 @@ class SQLExecution():
                 else:
                     output_result[CommonVariables.load_type] = self.load_type
                     output_result[CommonVariables.result_of_load] = CommonVariables.successfull_load
-                self.tgt_connection_obj.release_connection()
+                self.release_acquired_db_connection ()
                 self.SqlExecutionLogger.info(f'End_time of ETL for  {self.table_name} , {dt.now()}')
                 return StringUtility.merge_dict(self.output_dict,output_result)

@@ -51,8 +51,11 @@ class JsonTagVariables():
     enable_auto_commit = 'ENABLE_AUTO_COMMIT'
     max_poll_interval_inms = 'MAX_POLL_INTERVAL_INMS'
     consumer_live_status_interval_ins ='CONSUMER_LIVE_STATUS_INTERVAL_INS'
+    message_wait_exaust_interval_ins ='MESSAGE_WAIT_EXAUST_INTERVAL_INS'
+    kafka_message_poll_wait_inms= 'KAFKA_MESSAGE_POLL_WAIT_INMS'
     group_id  = 'group.id'
     auto_offset_reset = 'auto.offset.reset'
+
 
     # SIL Tables config file details
     sil_table_root_tag='TABLE_GROUPS'

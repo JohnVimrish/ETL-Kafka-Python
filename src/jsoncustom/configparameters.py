@@ -42,6 +42,8 @@ class ConfigParametersValue():
         cls.enable_auto_commit                              = kafka_config_obj.json_val(JsonTagVariables.enable_auto_commit)
         cls.max_poll_interval_inms                          = kafka_config_obj.json_val(JsonTagVariables.max_poll_interval_inms)
         cls.consumer_live_status_interval_ins               = kafka_config_obj.json_val(JsonTagVariables.consumer_live_status_interval_ins)
+        cls.message_wait_exaust_interval_ins                = kafka_config_obj.json_val(JsonTagVariables.message_wait_exaust_interval_ins)
+        cls.kafka_message_poll_wait_inms                    = kafka_config_obj.json_val(JsonTagVariables.kafka_message_poll_wait_inms)
 
 class TableConfigParametersValue():
 
