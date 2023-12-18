@@ -1,0 +1,54 @@
+{
+    "SRC_CONNECTION": "KAFKA_PYTHON",
+    "TGT_CONNECTION": "Postgres_Connection_First",
+    "TGT_TABLE_NAME": "EMPLOYEES",
+    "TGT_SCHEMA_NAME": "KAFKA_ETL",
+    "TABLE_UNIQUE_COLUMNS": [
+        "EMPLOYEE_ID"
+    ],
+    "PRE_TRIGGER_TASK": {
+        "PRT_OTHER_TGT_SQL": [],
+        "PRT_TRUNCATE_TGT_TABLE_FULL_SQL": [
+            "TRUNCATE TABLE KAFKA_ETL.EMPLOYEES ;"
+        ],
+        "PRT_TRUNCATE_TGT_TABLE_INC_SQL": []
+    },
+    "DATA_FLOW_TASK": {
+        "DFT_TGT_TABLE_COLUMNS": [
+            "EMPLOYEE_ID",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "EMAIL",
+            "PHONE_NUMBER",
+            "JOB_ID",
+            "SALARY",
+            "COMMISSION_PCT",
+            "MANAGER_ID",
+            "DEPARTMENT_ID"
+        ],
+        "DFT_TGT_COLUMNS_DTYPE": {
+            "EMPLOYEE_ID": "int",
+            "FIRST_NAME": "str",
+            "LAST_NAME": "str",
+            "EMAIL": "str",
+            "PHONE_NUMBER": "str",
+            "HIRE_DATE": "datetime",
+            "JOB_ID": "str",
+            "SALARY": "float",
+            "COMMISSION_PCT": "float",
+            "MANAGER_ID": "int",
+            "DEPARTMENT_ID": "int"
+        },
+        "DFT_INSERT_SQL": [
+            "INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();"
+        ]
+    },
+    "DELETE_TASK": {
+        "DELETE_SQL": [
+            "DELETE FROM KAFKA_ETL.EMPLOYEES WHERE (EMPLOYEE_ID) IN %s ;"
+        ]
+    },
+    "POST_TRIGGER_TASK": {
+        "PST_OTHER_TGT_SQL": []
+    }
+}

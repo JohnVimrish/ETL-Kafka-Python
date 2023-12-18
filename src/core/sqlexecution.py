@@ -4,7 +4,7 @@ from database.dbinitialisers import DatabaseInitialiser
 from root.commonvariables import CommonVariables
 from util.loggingutility import LoggingUtil
 from util.stringutil import StringUtility
-
+from datetime import datetime
 
 class SQLExecution():
 
@@ -14,7 +14,7 @@ class SQLExecution():
                         table_log_file ,                                   
                         config_filepath):
                 self.table_name = table_name
-                self.SqlExecutionLogger = ObjLogging.setup_logger(table_name, ConfigParametersValue.json_sql_exec_log_level)
+                self.SqlExecutionLogger = ObjLogging.setup_logger(table_name, ConfigParametersValue.json_sql_value_extc_log_level)
                 self.ObjLogging = ObjLogging
                 self.SqlExecutionLoggerFile = table_log_file
                 ObjLogging.link_logger_filehandler(self.SqlExecutionLogger, self.SqlExecutionLoggerFile)
@@ -26,6 +26,18 @@ class SQLExecution():
                 self.output_dict[CommonVariables.table_schema] =  self.ObjTableConfiguration.target_schema_name
                 self.output_dict[CommonVariables.load_start_time] = self.load_start_time
                 self.output_dict[CommonVariables.table_name] = self.ObjTableConfiguration.target_table_name
+
+
+            def __data_type_conversion(self,convert_value, conversion_match ) :
+                c_dtype = self.ObjTableConfiguration.dft_tgt_column_dtype
+                if c_dtype[conversion_match]=='str':
+                   return  str(convert_value)
+                elif c_dtype[conversion_match]=='int' :
+                    return   int(convert_value)
+                elif c_dtype[conversion_match]=='float' :
+                    return   float(convert_value)    
+                elif c_dtype[conversion_match]=='datetime' :
+                    return  datetime.utcfromtimestamp(convert_value)
             
             def _initialise_database_etl(    self, 
                                             load_type, 
@@ -90,9 +102,7 @@ class SQLExecution():
 
                 other_sql = self.ObjTableConfiguration.pre_other_target_sql 
                 trunc_ods_tbl_sql = self.ObjTableConfiguration.pre_trun_target_full_sql
-                drop_indexes_ods_sql = self.ObjTableConfiguration.pre_drop_target_ind_full_sql 
-                trunc_ods_inc_sql = self.ObjTableConfiguration.pre_trun_target_inc_sql
-                drop_indexes_inc_sql = self.ObjTableConfiguration.pre_drop_target_ind_inc_sql
+                trunc_ods_tbl_inc_sql = self.ObjTableConfiguration.pre_trun_target_inc_sql
 
                 for activity in CommonVariables.pre_trigger_steps:
                     
@@ -102,14 +112,8 @@ class SQLExecution():
                     elif (activity == CommonVariables.task_truncate_tbl_full_sql and self.load_type == FULL):
                         self.__execute_queries_log(activity,trunc_ods_tbl_sql)
 
-                    elif (activity == CommonVariables.task_drp_indexes_full_sql and self.load_type == FULL):
-                        self.__execute_queries_log(activity, drop_indexes_ods_sql)
-
                     elif (activity == CommonVariables.task_truncate_tbl_inc_sql and self.load_type == INCREMENTAL):
-                        self.__execute_queries_log(activity,trunc_ods_inc_sql)
-
-                    elif (activity == CommonVariables.task_drp_indexes_inc_sql and self.load_type == INCREMENTAL):
-                        self.__execute_queries_log(activity, drop_indexes_inc_sql)
+                        self.__execute_queries_log(activity,trunc_ods_tbl_inc_sql)
 
             def __data_flow_task(self, 
                                 insert_data):
@@ -128,24 +132,22 @@ class SQLExecution():
                     for each_dict in input_data  :
                         rearranged_insert_tuple  = list()
                         for column_name in rearrange_csv_columns:
-                            rearranged_insert_tuple.append(each_dict[column_name])
+                            rearranged_insert_tuple.append(self.__data_type_conversion(each_dict[column_name],column_name))
                         input_data_rearranged.append(tuple(rearranged_insert_tuple))
+                    
                     self.SqlExecutionLogger.debug( f'column rearrange and conversion to tupple array ends at {dt.now()}')
                     self.tgt_connection_obj.upsert_data_in_batches(input_data_rearranged, execute_query)
                     self.SqlExecutionLogger.debug( f'Current Batch records are successfully  uploaded to target table in DB {dt.now()}')
-                    
                     total_tgt_rows = self.tgt_connection_obj.get_full_write_row_count()
+
                     return total_src_rows, total_tgt_rows
 
-                FULL=CommonVariables.full_load_type
-                INCREMENTAL=CommonVariables.inc_load_type
-
-                process_csv_rearrage_column = self.ObjTableConfiguration.dft_source_csv_columns
+                process_csv_rearrage_column = self.ObjTableConfiguration.dft_tgt_columns
                 insert_sql = self.ObjTableConfiguration.dft_insert_sql
                 self.SqlExecutionLogger.info(f'DFT Load Type  : {self.load_type}')
                 self.SqlExecutionLogger.info(f"Target Execute SQL : {''.join(insert_sql)}")
 
-                rowswritten = self.execute_dft_queries(
+                rowswritten = execute_dft_queries(
                                                         process_csv_rearrage_column,
                                                         insert_data,
                                                         insert_sql
@@ -157,40 +159,26 @@ class SQLExecution():
                 return tgt_row_count
 
             def __delete_task(  self,
-                                tgt_connection_obj,
-                                activity):
+                                activity,
+                                delete_records:list):
                 
 
                 self.SqlExecutionLogger.info( f'Steps under {activity} will be  Executed')
-                delete_sql = self.ObjTableConfiguration.del_hard_delete_sql 
+                delete_sql = self.ObjTableConfiguration.delete_sql 
                 for query in delete_sql:
                     delete_query = query
                 error_message = 'Error executing for activity :{} on query :{}, with'.format(activity, delete_query) + ' error_message : {} .'
-                tgt_connection_obj.execute_sql(delete_query, error_message)
+                for  each_delete_rec in delete_records :
+                    delete_records = list()
+                    for column_name in self.ObjTableConfiguration.delete_use_columns :
+                       delete_records.append(self.__data_type_conversion(each_delete_rec[column_name],column_name))
+                    self.tgt_connection_obj.execute_sql(delete_query, error_message,tuple(delete_records))
                 self.SqlExecutionLogger.info(' Number of Deleted  records from ODS Table is 0 .')
 
             def __post_trigger_task(self):
 
-                FULL = CommonVariables.full_load_type
-                INCREMENTAL = CommonVariables.inc_load_type
-
-                create_indexes_on_ODS_full = self.ObjTableConfiguration.post_create_ind_target_full_sql
-                create_indexes_on_ODS_inc = self.ObjTableConfiguration.post_create_ind_target_incremental_sql
                 other_sql = self.ObjTableConfiguration.post_other_target_sql
-
-                for activity in CommonVariables.post_trigger_steps:
-
-                    if (activity == CommonVariables.task_create_indexes_full  and self.load_type == FULL): 
-                        self.__execute_queries_log( activity, 
-                                                    create_indexes_on_ODS_full)
-
-                    elif (activity == CommonVariables.task_create_indexes_inc and self.load_type == INCREMENTAL):
-                        self.__execute_queries_log(activity,
-                                                create_indexes_on_ODS_inc)
-
-                    elif activity == CommonVariables.task_other_target_sql:
-                        self.__execute_queries_log(activity,
-                                                other_sql)
+                self.__execute_queries_log(CommonVariables.task_other_target_sql,other_sql)
 
             def execute_pre_trigger_task(self) :                 
                 self.SqlExecutionLogger.info( f'Steps under Pre Trigger task will be  Executed')
@@ -214,7 +202,7 @@ class SQLExecution():
                 try :
                     self.SqlExecutionLogger.info( f'Steps under Delete task will be  Executed')
                     if self.tgt_connection_obj.cursor_status()   : 
-                        self.__delete_task()
+                        self.__delete_task(CommonVariables.delete_activity,delete_records)
                     else :
                         self.SqlExecutionLogger.info( f'cannot perform Delete task as database cursor as closed in  Post Trigger task .') 
                         self.SqlExecutionLogger.info( f'delete_records:{delete_records}')
@@ -253,3 +241,4 @@ class SQLExecution():
                 self.release_acquired_db_connection ()
                 self.SqlExecutionLogger.info(f'End_time of ETL for  {self.table_name} , {dt.now()}')
                 return StringUtility.merge_dict(self.output_dict,output_result)
+

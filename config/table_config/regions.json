@@ -1,0 +1,37 @@
+{
+    "SRC_CONNECTION": "KAFKA_PYTHON",
+    "TGT_CONNECTION": "Postgres_Connection_First",
+    "TGT_TABLE_NAME": "REGIONS",
+    "TGT_SCHEMA_NAME": "KAFKA_ETL",
+    "TABLE_UNIQUE_COLUMNS": [
+        "REGION_ID"
+    ],
+    "PRE_TRIGGER_TASK": {
+        "PRT_OTHER_TGT_SQL": [],
+        "PRT_TRUNCATE_TGT_TABLE_FULL_SQL": [
+            "TRUNCATE TABLE KAFKA_ETL.REGIONS ;"
+        ],
+        "PRT_TRUNCATE_TGT_TABLE_INC_SQL": []
+    },
+    "DATA_FLOW_TASK": {
+        "DFT_TGT_TABLE_COLUMNS": [
+            "REGION_ID",
+            "REGION_NAME"
+        ],
+        "DFT_TGT_COLUMNS_DTYPE": {
+            "REGION_ID": "int",
+            "REGION_NAME": "str"
+        },
+        "DFT_INSERT_SQL": [
+            "INSERT INTO KAFKA_ETL.REGIONS(REGION_ID,REGION_NAME) VALUES %s   ON CONFLICT (REGION_ID) DO UPDATE SET REGION_ID = EXCLUDED.REGION_ID,REGION_NAME = EXCLUDED.REGION_NAME,DWH_UPDATE_DT = now();"
+        ]
+    },
+    "DELETE_TASK": {
+        "DELETE_SQL": [
+            "DELETE FROM KAFKA_ETL.REGIONS WHERE (REGION_ID) IN %s ;"
+        ]
+    },
+    "POST_TRIGGER_TASK": {
+        "PST_OTHER_TGT_SQL": []
+    }
+}

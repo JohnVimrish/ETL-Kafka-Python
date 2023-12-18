@@ -8,6 +8,6 @@
 		"POSTGRES_CONNECTOR"  : "DEBUG" ,
 		"JSON_SQL_EXECUTION"  : "DEBUG",
 		"KAKFA_ETL_CONFIG"    :"DEBUG",
-		"KAFKA_CONNECT_CONFIG"  :  "DEBUG"           
+		"KAFKA_CONNECT_CONFIG"  :  "DEBUG"          
 	}
 } 

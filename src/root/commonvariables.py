@@ -13,8 +13,8 @@ class CommonVariables () :
 
     # package ETL_to_Postgres static variables 
     execution_steps                = ['PRE_TRIGGER_TASK','DATA_FLOW_TASK','DELETE_TASK','POST_TRIGGER_TASK']
-    pre_trigger_steps              = ['OTHER_TGT_SQL','TRUNCATE_TGT_TABLE_FULL_SQL','DROP_TGT_INDEXES_FULL_SQL','TRUNCATE_TGT_TABLE_INC_SQL','DROP_TGT_INDEXES_INC_SQL']
-    post_trigger_steps             = ['CREATE_INDEX_TGT_FULL_SQL','CREATE_INDEX_TGT_INC_SQL','OTHER_TGT_SQL']
+    pre_trigger_steps              = ['PRT_OTHER_TGT_SQL','PRT_TRUNCATE_TGT_TABLE_FULL_SQL','PRT_TRUNCATE_TGT_TABLE_INC_SQL']
+    post_trigger_steps             = ['PST_OTHER_TGT_SQL']
     full_load_type                 = 'FULL'
     inc_load_type                  = 'INCREMENTAL'
     last_refresh_dt_not_present    = 'Not  Present'
@@ -31,25 +31,17 @@ class CommonVariables () :
     table_name                  = 'TABLE_NAME'
     load_start_time             = 'LOAD_START_TIME'
     load_end_time               = 'LOAD_END_TIME'
-
-    # lof file path 
-    main_log_file_path                         = '/main_log_file.log'
-
     
     # each tasks
     pre_trigger_task                            = 'PRE_TRIGGER_TASK'
     data_flow_task                              = 'DATA_FLOW_TASK'
     post_trigger_task                           = 'POST_TRIGGER_TASK'
-    task_other_sql                              = 'OTHER_SQL'
-    task_other_target_sql                       = 'OTHER_TGT_SQL'
-    task_dft                                    = 'Task_DFT'
-    task_truncate_tbl_full_sql                  = 'TRUNCATE_TGT_TABLE_FULL_SQL'
-    task_truncate_tbl_inc_sql                   = 'TRUNCATE_TGT_TABLE_INC_SQL'
-    task_drp_indexes_full_sql                   = 'DROP_TGT_INDEXES_FULL_SQL' 
-    task_drp_indexes_inc_sql                    = 'DROP_TGT_INDEXES_INC_SQL'
-    task_create_indexes_full                    = 'CREATE_INDEX_TGT_FULL_SQL'  
-    task_create_indexes_inc                     = 'CREATE_INDEX_TGT_INC_SQL'
-    
+    task_other_sql                              = 'PRT_OTHER_TGT_SQL'
+    task_other_target_sql                       = 'PST_OTHER_TGT_SQL'
+    task_dft                                    = 'DATA_FLOW_TASK'
+    task_truncate_tbl_full_sql                  = 'PRT_TRUNCATE_TGT_TABLE_FULL_SQL'
+    task_truncate_tbl_inc_sql                   = 'PRT_TRUNCATE_TGT_TABLE_INC_SQL'
+    delete_activity                             = 'DELETE_TASK'
 
     # logger_name module vise 
     main_config                                 = 'main'
@@ -59,7 +51,7 @@ class CommonVariables () :
     postgres_con_pool                           = 'PostgresConnectionPool'
     thread_exec                                 = 'ThreadExecution'
     log_level_config                            = 'logLevelConfig'
-    table_config                                = ''
+    table_config                                = 'TableConfig'
     Kakfa_etl_config                            = 'Kafka_ETL_Process'
     kafka_connect_config                        = 'Kafka_CDC_Consumer'
     Postgres_Database                           = 'POSTGRESQL'
