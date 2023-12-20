@@ -16,10 +16,9 @@ def main_function():
     config_json_object                             = JsonValueExtractor(sys.argv[1])
     connection_json_object                         = JsonValueExtractor(sys.argv[2])
     log_level_json_object                          = JsonValueExtractor(sys.argv[3])
-    table_groups_json_object                       = JsonValueExtractor(sys.argv[4])
-    kafka_configuration_json_object                = JsonValueExtractor(sys.argv[5])
+    kafka_configuration_json_object                = JsonValueExtractor(sys.argv[4])
 
-    ConfigParametersValue(config_json_object, connection_json_object,log_level_json_object,table_groups_json_object,kafka_configuration_json_object)
+    ConfigParametersValue(config_json_object, connection_json_object,log_level_json_object,kafka_configuration_json_object)
                           
 #     email_obj = EMailSummaryLogAttachments(ConfigParametersValue.smtp_server_host,
 #                                            ConfigParametersValue.smtp_server_port,
@@ -33,7 +32,6 @@ def main_function():
         KafkaETLMainLogger = MainLogOBJ.setup_logger(
             CommonVariables.main_config, ConfigParametersValue.kafka_main_log_level)
         CommonVariables.thread_log_folder = dt.now().strftime(ConfigParametersValue.main_log_file_name_format)
-        print(CommonVariables.thread_log_folder)
         main_logfile = MainLogOBJ.create_log_file(f'ETLProgram.log',f'{CommonVariables.thread_log_folder}/')
         MainLogOBJ.link_logger_filehandler(KafkaETLMainLogger,main_logfile)
         start_time = dt.now()
@@ -51,8 +49,6 @@ def main_function():
             MainLogOBJ, CommonVariables.connection_param, main_logfile, ConfigParametersValue.json_value_extc_log_level)
         log_level_json_object.reinitialise_logger_object(
             MainLogOBJ, CommonVariables.log_level_config, main_logfile, ConfigParametersValue.json_value_extc_log_level)
-        table_groups_json_object.reinitialise_logger_object(
-            MainLogOBJ, CommonVariables.table_config, main_logfile, ConfigParametersValue.json_value_extc_log_level)
         # email_obj.send_load_start_viamail(ConfigParametersValue.email_subjectline.format('has Started .'))
         ObjETLProcess = Kafka_ETL_Process(MainLogOBJ, main_logfile,ConfigParametersValue.load_type)
         ETLProcessStatus = ObjETLProcess.Process_ETL(ObjDBInitialiser)

@@ -8,7 +8,6 @@ class ConfigParametersValue():
     def __init__(cls, main_config_obj,
                       dbconnection_config_obj,
                       log_config_obj,
-                      table_config_obj,
                       kafka_config_obj):
 
         cls.max_threads_count_process                       = main_config_obj.json_val(JsonTagVariables.max_threads_count_process)
@@ -21,6 +20,7 @@ class ConfigParametersValue():
         cls.email_sender_emailid                            = main_config_obj.json_val(JsonTagVariables.email_sender_emailid)
         cls.email_receiver_list                             = main_config_obj.json_val(JsonTagVariables.email_receiver_list)
         cls.email_subjectline                               = main_config_obj.json_val(JsonTagVariables.email_subjectline)
+        cls.ind_table_config_file_dir                       = main_config_obj.json_val(JsonTagVariables.table_config_file_dir)
         cls.dbconnectors                                    = dbconnection_config_obj.json_val(JsonTagVariables.connectors)
         cls.all_packages_log_level                          = log_config_obj.json_val(JsonTagVariables.allpackages_log_level)
         cls.kafka_main_log_level                            = log_config_obj.json_val(JsonTagVariables.kafka_main_log_level)
@@ -32,7 +32,6 @@ class ConfigParametersValue():
         cls.postgres_connector_log_level                    = log_config_obj.json_val(JsonTagVariables.postgres_connector_log_level)
         cls.kakfa_etl_log_level                             = log_config_obj.json_val(JsonTagVariables.kakfa_etl_log_level)
         cls.kafka_connect_log_level                         = log_config_obj.json_val(JsonTagVariables.kafka_connect_log_level)
-        cls.table_groups                                    = table_config_obj.json_val(JsonTagVariables.sil_table_root_tag)
         cls.kafka_bootstrap_servers                         = kafka_config_obj.json_val(JsonTagVariables.kafka_bootstrap_servers)
         cls.default_consumer_group_id                       = kafka_config_obj.json_val(JsonTagVariables.default_consumer_group_id)
         cls.session_timeout_inms                            = kafka_config_obj.json_val(JsonTagVariables.session_timeout_inms)

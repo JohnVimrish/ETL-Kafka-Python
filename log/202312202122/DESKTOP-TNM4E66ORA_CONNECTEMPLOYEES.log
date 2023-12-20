@@ -1,0 +1,140 @@
+2023-12-20 21:22:33,131:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,132:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,138:EMPLOYEES:sqlexecution.py:_initialise_database_etl:50:INFO:Start_time of ETL for EMPLOYEES ,2023-12-20 21:22:33.138731
+2023-12-20 21:22:33,139:EMPLOYEES:dbinitialisers.py:init_tgt_connections:76:INFO:Postgres_Connection has connected as Target
+2023-12-20 21:22:33,139:EMPLOYEES:sqlexecution.py:execute_pre_trigger_task:189:INFO:Steps under Pre Trigger task will be  Executed
+2023-12-20 21:22:33,139:EMPLOYEES:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PRT_OTHER_TGT_SQL : 
+2023-12-20 21:22:33,139:EMPLOYEES:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PRT_OTHER_TGT_SQL Has Executed
+2023-12-20 21:22:33,140:EMPLOYEES:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PRT_TRUNCATE_TGT_TABLE_FULL_SQL : TRUNCATE TABLE KAFKA_ETL.EMPLOYEES ;
+2023-12-20 21:22:33,151:EMPLOYEES:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PRT_TRUNCATE_TGT_TABLE_FULL_SQL Has Executed
+2023-12-20 21:22:33,689:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,689:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,689:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,689:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.689935
+2023-12-20 21:22:33,689:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.689935
+2023-12-20 21:22:33,689:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.689935
+2023-12-20 21:22:33,694:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.694919
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :5
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.694919
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,694:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,695:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,695:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,695:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,695:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.695918
+2023-12-20 21:22:33,696:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.696914
+2023-12-20 21:22:33,696:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.696914
+2023-12-20 21:22:33,697:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,697:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.697911
+2023-12-20 21:22:33,697:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :10
+2023-12-20 21:22:33,697:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.697911
+2023-12-20 21:22:33,697:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,697:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,698:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,698:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,698:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,698:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,698:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.698908
+2023-12-20 21:22:33,699:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.698908
+2023-12-20 21:22:33,699:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.699906
+2023-12-20 21:22:33,700:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.700903
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :15
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.700903
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,700:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.700903
+2023-12-20 21:22:33,701:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.701901
+2023-12-20 21:22:33,701:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.701901
+2023-12-20 21:22:33,701:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.702898
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :20
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.702898
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,702:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,703:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.703897
+2023-12-20 21:22:33,704:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.704895
+2023-12-20 21:22:33,704:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.704895
+2023-12-20 21:22:33,705:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.705886
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :25
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.705886
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.705886
+2023-12-20 21:22:33,705:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.705886
+2023-12-20 21:22:33,706:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.706886
+2023-12-20 21:22:33,707:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.707803
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :30
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.707803
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,707:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,708:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.708803
+2023-12-20 21:22:33,708:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.708803
+2023-12-20 21:22:33,708:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.708803
+2023-12-20 21:22:33,709:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.709844
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :35
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.709844
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,709:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,710:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,710:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,710:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,710:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.710798
+2023-12-20 21:22:33,710:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.710798
+2023-12-20 21:22:33,710:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.710798
+2023-12-20 21:22:33,712:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.712286
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :40
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.712286
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,712:EMPLOYEES:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,JOB_ID,SALARY,COMMISSION_PCT,MANAGER_ID,DEPARTMENT_ID) VALUES %s   ON CONFLICT (EMPLOYEE_ID) DO UPDATE SET EMPLOYEE_ID = EXCLUDED.EMPLOYEE_ID, FIRST_NAME = EXCLUDED.FIRST_NAME, LAST_NAME = EXCLUDED.LAST_NAME, EMAIL = EXCLUDED.EMAIL, PHONE_NUMBER = EXCLUDED.PHONE_NUMBER, JOB_ID = EXCLUDED.JOB_ID, SALARY = EXCLUDED.SALARY, COMMISSION_PCT = EXCLUDED.COMMISSION_PCT, MANAGER_ID = EXCLUDED.MANAGER_ID, DEPARTMENT_ID = EXCLUDED.DEPARTMENT_ID,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,713:EMPLOYEES:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.713286
+2023-12-20 21:22:33,713:EMPLOYEES:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.713286
+2023-12-20 21:22:33,713:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.713286
+2023-12-20 21:22:33,714:POSTGRESQL-EMPLOYEES:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.714475
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :45
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into EMPLOYEES ends at 2023-12-20 21:22:33.714475
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,714:EMPLOYEES:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:43,709:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:43,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,739:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,735:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,751:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,747:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,749:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !
+2023-12-20 21:23:13,764:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,765:EMPLOYEES:sqlexecution.py:execute_post_trigger_task:219:INFO:Steps under Post Trigger task will be  Executed
+2023-12-20 21:23:13,766:EMPLOYEES:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PST_OTHER_TGT_SQL : 
+2023-12-20 21:23:13,766:EMPLOYEES:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PST_OTHER_TGT_SQL Has Executed
+2023-12-20 21:23:13,767:EMPLOYEES:sqlexecution.py:load_plan_status:249:INFO:End_time of ETL for  EMPLOYEES , 2023-12-20 21:23:13.767726
+2023-12-20 21:23:13,768:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !

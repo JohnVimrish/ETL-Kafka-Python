@@ -1,0 +1,35 @@
+2023-12-20 21:22:33,132:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,137:REGIONS:sqlexecution.py:_initialise_database_etl:50:INFO:Start_time of ETL for REGIONS ,2023-12-20 21:22:33.137735
+2023-12-20 21:22:33,137:REGIONS:dbinitialisers.py:init_tgt_connections:76:INFO:Postgres_Connection has connected as Target
+2023-12-20 21:22:33,137:REGIONS:sqlexecution.py:execute_pre_trigger_task:189:INFO:Steps under Pre Trigger task will be  Executed
+2023-12-20 21:22:33,137:REGIONS:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PRT_OTHER_TGT_SQL : 
+2023-12-20 21:22:33,138:REGIONS:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PRT_OTHER_TGT_SQL Has Executed
+2023-12-20 21:22:33,139:REGIONS:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PRT_TRUNCATE_TGT_TABLE_FULL_SQL : TRUNCATE TABLE KAFKA_ETL.REGIONS ;
+2023-12-20 21:22:33,151:REGIONS:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PRT_TRUNCATE_TGT_TABLE_FULL_SQL Has Executed
+2023-12-20 21:22:33,688:REGIONS:sqlexecution.py:execute_data_flow_task:198:INFO:Steps under Data Flow task will be  Executed
+2023-12-20 21:22:33,689:REGIONS:sqlexecution.py:__data_flow_task:150:INFO:DFT Load Type  : FULL
+2023-12-20 21:22:33,689:REGIONS:sqlexecution.py:__data_flow_task:151:INFO:Target Execute SQL : INSERT INTO KAFKA_ETL.REGIONS(REGION_ID,REGION_NAME) VALUES %s   ON CONFLICT (REGION_ID) DO UPDATE SET REGION_ID = EXCLUDED.REGION_ID,REGION_NAME = EXCLUDED.REGION_NAME,DWH_UPDATE_DT = now();
+2023-12-20 21:22:33,690:REGIONS:sqlexecution.py:execute_dft_queries:133:DEBUG:column rearrange and conversion to tupple array starts at 2023-12-20 21:22:33.690931
+2023-12-20 21:22:33,690:REGIONS:sqlexecution.py:execute_dft_queries:141:DEBUG:column rearrange and conversion to tupple array ends at 2023-12-20 21:22:33.690931
+2023-12-20 21:22:33,690:POSTGRESQL-REGIONS:postgresconnector.py:__upsert_data:56:DEBUG:Upsert data  write starts at 2023-12-20 21:22:33.690931
+2023-12-20 21:22:33,693:POSTGRESQL-REGIONS:postgresconnector.py:__upsert_data:67:INFO:Number of Rows written :5
+2023-12-20 21:22:33,695:REGIONS:sqlexecution.py:execute_dft_queries:143:DEBUG:Current Batch records are successfully  uploaded to target table in DB 2023-12-20 21:22:33.695918
+2023-12-20 21:22:33,695:REGIONS:sqlexecution.py:__data_flow_task:159:INFO:Target Row count :5
+2023-12-20 21:22:33,695:REGIONS:sqlexecution.py:__data_flow_task:160:INFO:Insert with  FULL into REGIONS ends at 2023-12-20 21:22:33.695918
+2023-12-20 21:22:33,696:REGIONS:sqlexecution.py:execute_delete_task:208:INFO:Steps under Delete task will be  Executed
+2023-12-20 21:22:33,696:REGIONS:sqlexecution.py:__delete_task:169:INFO:Steps under DELETE_TASK will be  Executed
+2023-12-20 21:22:33,696:REGIONS:sqlexecution.py:__delete_task:181:INFO: Number of Deleted  records from ODS Table is 0 .
+2023-12-20 21:22:43,709:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:43,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,739:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,735:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,751:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,747:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,748:REGIONS:sqlexecution.py:execute_post_trigger_task:219:INFO:Steps under Post Trigger task will be  Executed
+2023-12-20 21:23:13,748:REGIONS:sqlexecution.py:__execute_queries_log:86:INFO:Queries of  PST_OTHER_TGT_SQL : 
+2023-12-20 21:23:13,748:REGIONS:sqlexecution.py:__execute_queries_log:90:INFO:Queries with  PST_OTHER_TGT_SQL Has Executed
+2023-12-20 21:23:13,749:REGIONS:sqlexecution.py:load_plan_status:249:INFO:End_time of ETL for  REGIONS , 2023-12-20 21:23:13.749802
+2023-12-20 21:23:13,749:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !
+2023-12-20 21:23:13,764:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,768:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !

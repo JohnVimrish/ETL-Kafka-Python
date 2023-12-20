@@ -6,6 +6,7 @@ from database import dbinitialisers
 from core.sqlexecution import SQLExecution
 import time
 import re
+import json as js 
 from datetime import datetime as dt
 
 
@@ -56,13 +57,15 @@ class Kafka_CDC_Consumer():
 
     def __process_messages_from_topics(self,batch_interval_seconds,kafka_message_wait_interval:int, poll_timeout:int,kafka_insert_batch_limit:int):
             
-            def insert_data_to_var ( message,insert_var:list,delete_list:list) :
-                message_operation = message['payload']['op']
+            def insert_data_to_var ( message,insert_list:list,delete_list:list) :
+
+                message = js.loads(message.decode('utf-8'))
+                message_operation =message['payload']['op']
                 if message_operation in ['i','r','u']: 
-                    insert_data.append(message['payload']['after'])
+                    insert_list.append(message['payload']['after'])
                 elif message_operation in ['d']:
                      delete_list.append(message['payload']['before'])
-                return insert_var,delete_list
+                return insert_list,delete_list
             
             def process_insertion_of_data(insert_data:list,delete_data:list):
                 if self.Database_Task_Executor.execute_dft_delete_task(insert_data,delete_data) is not None :
@@ -77,10 +80,12 @@ class Kafka_CDC_Consumer():
             waiting_time  = dt.now()
             waiting_counter = 0 
             insert_data = list()
+            message_status = None 
             delete_data = list()
             while True:
                     # Check if batch interval has elapsed
                     if time.time() - start_time.timestamp() >= batch_interval_seconds:
+                        message_status= CommonVariables.successfull_load  if message_status is None  else message_status
                         break
                     else :
                         try:
@@ -88,7 +93,9 @@ class Kafka_CDC_Consumer():
                             message = self.kafka_consumer_client.poll(timeout=poll_timeout)  # Adjust timeout as needed based on waiting time needed to acquire message 
                             if message is None :
                                 if time.time() - waiting_time.timestamp() >= kafka_message_wait_interval:
-                                    message_status,insert_data,delete_data = process_insertion_of_data(insert_data,delete_data)
+                                    if (len(insert_data)>0 or len(delete_data)) :
+                                            message_status,insert_data,delete_data = process_insertion_of_data(insert_data,delete_data)
+                                    message_status= CommonVariables.successfull_load  if message_status is None  else message_status
                                     break
                                 if waiting_counter == 0 :
                                      waiting_time  = dt.now()
@@ -102,11 +109,12 @@ class Kafka_CDC_Consumer():
                                     break 
                                 else :
                                     insert_data,delete_data = insert_data_to_var(message.value(),insert_data,delete_data)
-                                    if kafka_insert_batch_limit == len(insert_data):                                         
+                                    if kafka_insert_batch_limit == len(insert_data):                                    
                                        message_status,insert_data,delete_data  = process_insertion_of_data(insert_data,delete_data)
                                        if message_status == CommonVariables.successfull_load :
                                             waiting_counter =  0 
                                        else :
+                                            message_status= CommonVariables.successfull_load  if message_status is None  else message_status
                                             break 
                         except (kafka_error.KafkaError,Exception) as error_message:
                                 self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error_message)
@@ -128,13 +136,13 @@ class Kafka_CDC_Consumer():
             try :
                 self.__subscribe_topic(topic)
                 # Use regex to find the second occurrence of '.'
-                match = re.search(r'(?<=\..*\.)(\w+)', topic)
+                match = re.search(r'(?<=\.)(\w+)$', topic)
                 if match:
                     table_name = match.group(1)
                     self.Database_Task_Executor = SQLExecution(table_name,
                             self.ObjLogger,
                             self.LogFile,                                   
-                            ConfigParametersValue.table_configuration_file_directory+'{table_name}.json')
+                            f'{ConfigParametersValue.ind_table_config_file_dir}{table_name.lower()}.json')
                     if self.Database_Task_Executor._initialise_database_etl(self.load_type,DatabaseObj) is None :
                         if self.Database_Task_Executor.execute_pre_trigger_task() is None :
                             if  self.__process_messages_from_topics(batch_interval_seconds,
@@ -159,7 +167,7 @@ class Kafka_CDC_Consumer():
             except Exception as error  :
                     self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error)
                     self.ConsumerLoadStatus = CommonVariables.failed_load 
-        self.KafkaETLProcess.info('Kafka ETL Process , has Ended !')             
+        self.KafkaETLProcess.info('Kafka ETL Process , has Ended !')  
         return self.ConsumerLoadStatus
 
     def close_consumer(self):

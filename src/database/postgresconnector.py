@@ -4,6 +4,7 @@ from datetime import datetime as dt
 from util.loggingutility import LoggingUtil
 from database.postgresconnectionpool import PostgresConnectionPool
 from psycopg2.extensions import register_adapter, AsIs
+import numpy as np
 
 class PostgresConnection():
 

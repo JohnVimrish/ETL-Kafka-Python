@@ -12,6 +12,7 @@ class JsonTagVariables():
     email_receiver_list='EMAIL_RECEIVER_EMAIL_ID'
     email_subjectline='EMAIL_SUBJECT'
     wait_time_when_no_requestid_found='WAIT_MINUTES_NO_REQUEST'
+    table_config_file_dir= 'TABLE_CONFIG_FILE_DIR'
 
     # Connection  Parameters File
     connectors = 'Database_Connectors'
@@ -70,7 +71,7 @@ class JsonTagVariables():
     target_schema                     = 'TGT_SCHEMA_NAME'
     target_tbl                        = 'TGT_TABLE_NAME'
     delete_use_columns                = 'TABLE_UNIQUE_COLUMNS'
-    pre_trig_other_sql                = 'PRE_TRIGGER_TASK--OTHER_TGT_SQL'
+    pre_trig_other_sql                = 'PRE_TRIGGER_TASK--PRT_OTHER_TGT_SQL'
     pre_trig_trunc_ods_full           = 'PRE_TRIGGER_TASK--PRT_TRUNCATE_TGT_TABLE_FULL_SQL'
     pre_trig_trunc_ods_inc            = 'PRE_TRIGGER_TASK--PRT_TRUNCATE_TGT_TABLE_INC_SQL'
     dft_task                          = 'DATA_FLOW_TASK'
@@ -78,4 +79,4 @@ class JsonTagVariables():
     dft_tgt_column_dtype              = 'DATA_FLOW_TASK--DFT_TGT_COLUMNS_DTYPE'
     dft_insert_sql                    = 'DATA_FLOW_TASK--DFT_INSERT_SQL'
     del_process_tbls                  = 'DELETE_TASK--DELETE_SQL'
-    post_trig_other_sql               = 'POST_TRIGGER_TASK--OTHER_TGT_SQL'
+    post_trig_other_sql               = 'POST_TRIGGER_TASK--PST_OTHER_TGT_SQL'

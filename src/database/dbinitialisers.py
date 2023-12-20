@@ -1,4 +1,3 @@
-from ast import Str
 from logging import Logger
 from jsoncustom.configparameters import ConfigParametersValue
 from jsoncustom.jsontagvariables import JsonTagVariables
@@ -47,11 +46,11 @@ class DatabaseInitialiser ():
         self.db_init_logger.info(f"Overall Enabled Connections {','.join(self.connections)}")
                  
     def init_tgt_connections(self, 
-                                tgt_connection_name:Str,
+                                tgt_connection_name:str,
                                 thread_logger:Logger, 
                                 thread_logger_file, 
                                 log_obj:LoggingUtil, 
-                                table_name:Str):
+                                table_name:str):
 
         POSTGRESQL = CommonVariables.Postgres_Database
         postgres_log_level = ConfigParametersValue.postgres_connector_log_level
@@ -60,10 +59,11 @@ class DatabaseInitialiser ():
             for connection_name, connection_dict in self.connection_pools.items():
                 
                 connection_pool = connection_dict[JsonTagVariables.connection_pool].get_connection_pool()
-                db_type = connection_dict[JsonTagVariables.database_type]
+                db_type = connection_dict[JsonTagVariables.database_prod]
                 
                 # Target DB Connection
                 if ((tgt_connection_name == connection_name) and  db_type == POSTGRESQL):
+
                     try :
                         tgt_connection_obj = PostgresConnection( connection_pool,
                                                                 thread_logger_file, 

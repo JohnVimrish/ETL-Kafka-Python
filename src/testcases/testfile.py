@@ -3,6 +3,7 @@ import datetime
 # import ETL_to_PostgresDB as etl 
 # import Connection_configuration as conn 
 # import time 
+import re 
 
 
 
@@ -61,3 +62,15 @@ import datetime
 #     target_connection.close()
     
 #     time.sleep(1)
+
+match = re.search(r'(?<=\.)(\w+)$','DESKTOP-TNM4E66.ORA_CONNECT.DEPARTMENTS')
+print(match)
+if match:
+    table_name = match.group(1)
+    print(table_name)
+
+
+a= '24000.00'
+print(type(a))
+a= float(a)
+print(type(a))

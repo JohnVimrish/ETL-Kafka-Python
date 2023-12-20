@@ -13,5 +13,7 @@ class StringUtility () :
     @staticmethod
     # Python code to merge dict using update() method
     def merge_dict(dict1:dict, dict2:dict):
-        return(dict1.update(dict2))
+        for keys,values in dict2.items() :
+            dict1[keys] = values
+        return dict1
  

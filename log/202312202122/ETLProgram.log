@@ -1,0 +1,23 @@
+2023-12-20 21:22:32,939:main:main.py:main_function:38:INFO:ETL Start Time : 2023-12-20 21:22:32.939217 .
+2023-12-20 21:22:32,939:main:main.py:main_function:41:INFO:Connection Pool Establishment starts!
+2023-12-20 21:22:33,107:PostgresConnectionPool:postgresconnectionpool.py:__init__:48:INFO:Postgres_Connection Connector with  user_name:kafka, password : xxxx, host :127.0.0.1, port :5432,database : KAFKA_POC, min_num of connections :4,max_num of connections :4, db_type :POSTGRESQL  has connected !
+2023-12-20 21:22:33,108:DatabaseInitialiser:dbinitialisers.py:__init__:46:INFO:Overall Enabled Connections Postgres_Connection
+2023-12-20 21:22:33,108:main:main.py:main_function:45:INFO:Connection Pool Establishment ends!
+2023-12-20 21:22:33,108:Kafka_ETL_Process:kafkaetlprocess.py:__init__:15:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,108:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,131:Kafka_ETL_Process:kafkaetlprocess.py:Process_ETL:44:INFO:List of Topics available for ETL Process  - DESKTOP-TNM4E66.ORA_CONNECT.EMPLOYEES,DESKTOP-TNM4E66.ORA_CONNECT.REGIONS .
+2023-12-20 21:22:33,131:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:33,132:Kafka_CDC_Consumer:kafkaconnect.py:__init__:19:INFO:Kafka ETL Process , has Started !
+2023-12-20 21:22:43,709:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:43,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,724:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:22:53,739:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,735:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:03,751:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,747:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,749:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !
+2023-12-20 21:23:13,764:Kafka_CDC_Consumer:kafkaconnect.py:__process_messages_from_topics:103:INFO:Waiting No message produced yet !.
+2023-12-20 21:23:13,768:Kafka_CDC_Consumer:kafkaconnect.py:consume_messages:170:INFO:Kafka ETL Process , has Ended !
+2023-12-20 21:23:13,769:main:main.py:main_function:55:INFO:ETL Complete Status  : SUCCESSFUL .
+2023-12-20 21:23:13,770:main:main.py:main_function:56:INFO:ETL End Time : 2023-12-20 21:23:13.770715 .
+2023-12-20 21:23:13,770:PostgresConnectionPool:postgresconnectionpool.py:close_connection_pool:77:INFO:Postgres_Connection  has been closed !

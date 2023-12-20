@@ -1,6 +1,6 @@
 {
     "SRC_CONNECTION": "KAFKA_PYTHON",
-    "TGT_CONNECTION": "Postgres_Connection_First",
+    "TGT_CONNECTION": "Postgres_Connection",
     "TGT_TABLE_NAME": "EMPLOYEES",
     "TGT_SCHEMA_NAME": "KAFKA_ETL",
     "TABLE_UNIQUE_COLUMNS": [

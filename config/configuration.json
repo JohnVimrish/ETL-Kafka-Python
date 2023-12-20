@@ -1,7 +1,8 @@
 {
 	"MAX_THREADS_PROCESS": 6,
-	"LOAD_TYPE": "INCREMENTAL",
+	"LOAD_TYPE": "FULL",
 	"CONFIG_FILE_DIR": "/config/",
+	"TABLE_CONFIG_FILE_DIR" : "E:/fusion_ETL/kafka_code/ETL-Kafka-Python/config/table_config/",
 	"LOG_BASE_DIR": "/log/",
 	"LOG_MAIN_FILE_NAME_FORMAT": "%Y%m%d%H%M",
 	"EMAIL_SMTP_SERVER_HOST": "192.168.168.101",

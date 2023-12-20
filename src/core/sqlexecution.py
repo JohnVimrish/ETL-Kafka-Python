@@ -29,15 +29,17 @@ class SQLExecution():
 
 
             def __data_type_conversion(self,convert_value, conversion_match ) :
+                def check_null(obj) :
+                    return True if obj is None else obj
                 c_dtype = self.ObjTableConfiguration.dft_tgt_column_dtype
                 if c_dtype[conversion_match]=='str':
-                   return  str(convert_value)
+                   return str(convert_value) if check_null(convert_value)  is not True else None 
                 elif c_dtype[conversion_match]=='int' :
-                    return   int(convert_value)
+                    return int(convert_value)if check_null(convert_value)  is not True else None 
                 elif c_dtype[conversion_match]=='float' :
-                    return   float(convert_value)    
+                    return float(convert_value) if check_null(convert_value)  is not True else None    
                 elif c_dtype[conversion_match]=='datetime' :
-                    return  datetime.utcfromtimestamp(convert_value)
+                    return  datetime.utcfromtimestamp(convert_value) if check_null(convert_value)  is not True else None    
             
             def _initialise_database_etl(    self, 
                                             load_type, 
@@ -48,10 +50,11 @@ class SQLExecution():
                 self.SqlExecutionLogger.info(
                     'Start_time of ETL for {} ,{}'.format(self.table_name, self.load_start_time))        
                 tgt_connection = self.ObjTableConfiguration.target_connection
+                error_dict = dict()
                 self.load_type = load_type
                 try:
                     self.src_connection_obj = 'KAFKA'
-                    self.tgt_connection_obj = db_obj.init_db_connection(
+                    self.tgt_connection_obj = db_obj.init_tgt_connections(
                                                                     tgt_connection, 
                                                                     self.SqlExecutionLogger, 
                                                                     self.SqlExecutionLoggerFile, 
@@ -59,12 +62,12 @@ class SQLExecution():
                                                                     self.table_name)
                     self.__init_output_result()
                 except:
-                    error_dict = dict()
+                    
                     self.output_dict[CommonVariables.result_of_load] = CommonVariables.failed_load
                     error_dict[CommonVariables.error_reason] = 'Connection cannot be established as requested connection in config.json is missing from program\'s connection parameter.json'
                     error_dict[CommonVariables.load_end_time] = dt.now()
                     error_dict[CommonVariables.num_of_rows_processed] = 0
-                return StringUtility(self.output_dict,error_dict)
+                    return StringUtility.merge_dict(self.output_dict,error_dict)
             
 
             def __exception_raiser(self,error_status) :
@@ -134,7 +137,7 @@ class SQLExecution():
                         for column_name in rearrange_csv_columns:
                             rearranged_insert_tuple.append(self.__data_type_conversion(each_dict[column_name],column_name))
                         input_data_rearranged.append(tuple(rearranged_insert_tuple))
-                    
+
                     self.SqlExecutionLogger.debug( f'column rearrange and conversion to tupple array ends at {dt.now()}')
                     self.tgt_connection_obj.upsert_data_in_batches(input_data_rearranged, execute_query)
                     self.SqlExecutionLogger.debug( f'Current Batch records are successfully  uploaded to target table in DB {dt.now()}')
@@ -146,7 +149,7 @@ class SQLExecution():
                 insert_sql = self.ObjTableConfiguration.dft_insert_sql
                 self.SqlExecutionLogger.info(f'DFT Load Type  : {self.load_type}')
                 self.SqlExecutionLogger.info(f"Target Execute SQL : {''.join(insert_sql)}")
-
+                 
                 rowswritten = execute_dft_queries(
                                                         process_csv_rearrage_column,
                                                         insert_data,
@@ -155,7 +158,7 @@ class SQLExecution():
                 tgt_row_count = rowswritten[1]
                 self.SqlExecutionLogger.info(f'Target Row count :{tgt_row_count}')
                 self.SqlExecutionLogger.info(f'Insert with  {self.load_type} into {self.table_name} ends at {dt.now()}')
-
+              
                 return tgt_row_count
 
             def __delete_task(  self,
@@ -168,12 +171,14 @@ class SQLExecution():
                 for query in delete_sql:
                     delete_query = query
                 error_message = 'Error executing for activity :{} on query :{}, with'.format(activity, delete_query) + ' error_message : {} .'
-                for  each_delete_rec in delete_records :
-                    delete_records = list()
-                    for column_name in self.ObjTableConfiguration.delete_use_columns :
-                       delete_records.append(self.__data_type_conversion(each_delete_rec[column_name],column_name))
-                    self.tgt_connection_obj.execute_sql(delete_query, error_message,tuple(delete_records))
-                self.SqlExecutionLogger.info(' Number of Deleted  records from ODS Table is 0 .')
+                if len(delete_records) > 0 :
+                    for  each_delete_rec in delete_records :
+                        delete_records = list()
+                        for column_name in self.ObjTableConfiguration.delete_use_columns :
+                            delete_records.append(self.__data_type_conversion(each_delete_rec[column_name],column_name))
+                        self.tgt_connection_obj.execute_sql(delete_query, error_message,tuple(delete_records))
+                else:
+                    self.SqlExecutionLogger.info(' Number of Deleted  records from ODS Table is 0 .')
 
             def __post_trigger_task(self):
 
@@ -191,7 +196,7 @@ class SQLExecution():
             def execute_data_flow_task(self,insert_data:list) : 
                 try :
                     self.SqlExecutionLogger.info( f'Steps under Data Flow task will be  Executed')
-                    if self.tgt_connection_obj.cursor_status()   : 
+                    if self.tgt_connection_obj.cursor_status() is not True   : 
                         self.output_dict[CommonVariables.num_of_rows_processed] = self.__data_flow_task(insert_data)
                     else :
                         self.SqlExecutionLogger.info( f'cannot perform Data Flow task as database cursor as closed in  Pre Trigger task .') 
@@ -201,7 +206,7 @@ class SQLExecution():
             def execute_delete_task(self, delete_records:list) : 
                 try :
                     self.SqlExecutionLogger.info( f'Steps under Delete task will be  Executed')
-                    if self.tgt_connection_obj.cursor_status()   : 
+                    if self.tgt_connection_obj.cursor_status()  is not True    : 
                         self.__delete_task(CommonVariables.delete_activity,delete_records)
                     else :
                         self.SqlExecutionLogger.info( f'cannot perform Delete task as database cursor as closed in  Post Trigger task .') 
@@ -212,7 +217,7 @@ class SQLExecution():
             def execute_post_trigger_task(self) : 
                 try :
                         self.SqlExecutionLogger.info( f'Steps under Post Trigger task will be  Executed')
-                        if self.tgt_connection_obj.cursor_status()   : 
+                        if self.tgt_connection_obj.cursor_status()  is not True   : 
                             self.__post_trigger_task()
                         else :
                             self.SqlExecutionLogger.info( f'cannot perform Post Trigger Task  as database cursor as closed in  Data Flow task .') 
@@ -232,12 +237,14 @@ class SQLExecution():
 
             def load_plan_status(self):
                 output_result = dict() 
-                if self.tgt_connection_obj.cursor_status()   :           
+                if self.tgt_connection_obj.cursor_status()  is True   :           
                     output_result[CommonVariables.result_of_load] = CommonVariables.failed_load
                     output_result[CommonVariables.error_reason] = 'Cursor closed and not allowing other queries to be executed.'
+                    output_result[CommonVariables.load_end_time] = dt.now()
                 else:
                     output_result[CommonVariables.load_type] = self.load_type
                     output_result[CommonVariables.result_of_load] = CommonVariables.successfull_load
+                    output_result[CommonVariables.load_end_time] = dt.now()
                 self.release_acquired_db_connection ()
                 self.SqlExecutionLogger.info(f'End_time of ETL for  {self.table_name} , {dt.now()}')
                 return StringUtility.merge_dict(self.output_dict,output_result)
