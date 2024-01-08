@@ -1,5 +1,6 @@
 class JsonTagVariables():
-
+    """_summary_
+    """
     # config file parameters
     max_threads_count_process='MAX_THREADS_PROCESS'
     type_of_load_to_process='LOAD_TYPE'

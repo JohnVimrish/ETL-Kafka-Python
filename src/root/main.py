@@ -12,7 +12,8 @@ from util.loggingutility import LoggingUtil
 # from util.fusionemailsender import EMailSummaryLogAttachments
 
 def main_function():
-
+    """_summary_
+    """
     config_json_object                             = JsonValueExtractor(sys.argv[1])
     connection_json_object                         = JsonValueExtractor(sys.argv[2])
     log_level_json_object                          = JsonValueExtractor(sys.argv[3])
@@ -27,7 +28,8 @@ def main_function():
 #                                            ConfigParametersValue.email_subjectline)
 
     try:
-
+    """_summary_
+    """
         MainLogOBJ = LoggingUtil(ConfigParametersValue.log_base_directory)
         KafkaETLMainLogger = MainLogOBJ.setup_logger(
             CommonVariables.main_config, ConfigParametersValue.kafka_main_log_level)
@@ -62,6 +64,11 @@ def main_function():
         #                                     ConfigParametersValue.overall_summary_boc_columns_to_expose
         #                                     )
     except Exception as error:
+    """_summary_
+
+    Raises:
+        error: _description_
+    """    
         ex_type, ex_value, ex_traceback = sys.exc_info()
         # Extract unformatter stack traces as tuples
         trace_back = traceback.extract_tb(ex_traceback)

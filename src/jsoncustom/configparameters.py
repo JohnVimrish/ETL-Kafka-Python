@@ -3,13 +3,22 @@ from jsoncustom.jsonvalueextract import JsonValueExtractor
 from util.stringutil import StringUtility
 
 class ConfigParametersValue():
+    """_summary_
+    """    
 
     @classmethod
     def __init__(cls, main_config_obj,
                       dbconnection_config_obj,
                       log_config_obj,
                       kafka_config_obj):
+        """_summary_
 
+        Args:
+            main_config_obj (_type_): _description_
+            dbconnection_config_obj (_type_): _description_
+            log_config_obj (_type_): _description_
+            kafka_config_obj (_type_): _description_
+        """
         cls.max_threads_count_process                       = main_config_obj.json_val(JsonTagVariables.max_threads_count_process)
         cls.load_type                                       = main_config_obj.json_val(JsonTagVariables.type_of_load_to_process)
         cls.table_configuration_file_directory              = StringUtility.derive_actual_directory(main_config_obj.json_val(JsonTagVariables.table_configuration_file_directory))
@@ -47,8 +56,16 @@ class ConfigParametersValue():
         cls.kafka_insert_batch_number                       = kafka_config_obj.json_val(JsonTagVariables.kafka_insert_batch_number)
 
 class TableConfigParametersValue():
-
+    """_summary_
+    """
     def __init__(self, table_config_path,ObjLogger,Logfile):
+        """_summary_
+
+        Args:
+            table_config_path (_type_): _description_
+            ObjLogger (_type_): _description_
+            Logfile (_type_): _description_
+        """        
 
         self.ObjTableConfiguration                                   = JsonValueExtractor(table_config_path,Logfile,ConfigParametersValue.json_value_extc_log_level)
         self.target_connection                                       = self.ObjTableConfiguration.json_val(JsonTagVariables.target_db)

@@ -13,6 +13,14 @@ class PostgresConnectionPool():
                  config_connect_vars: dict,
                  log_obj: LoggingUtil,
                  logger_file_handler):
+        """_summary_
+
+        Args:
+            db_connector_name (_type_): _description_
+            config_connect_vars (dict): _description_
+            log_obj (LoggingUtil): _description_
+            logger_file_handler (_type_): _description_
+        """        
 
    
         # Logger Initialization
@@ -53,9 +61,22 @@ class PostgresConnectionPool():
                 db_connector_name, err), exc_info=True)
 
     def get_connection_pool(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """        
         return self.connection_pool
 
     def log_pgdb_exception(self, err_msg_obj):
+        """_summary_
+
+        Args:
+            err_msg_obj (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """        
         # get details about the exception
         err_type, err_obj, traceback = sys.exc_info()
         # get the line number when exception occured
@@ -67,10 +88,22 @@ class PostgresConnectionPool():
         return str1 + str2
 
     def log_error(self, log_statement, error_message):
+        """_summary_
+
+        Args:
+            log_statement (_type_): _description_
+            error_message (_type_): _description_
+        """        
         self.pg_cp_logger.error(log_statement.format(
             self.log_pgdb_exception(error_message)), exc_info=True)
 
     def close_connection_pool(self, connection_name, log_message):
+        """_summary_
+
+        Args:
+            connection_name (_type_): _description_
+            log_message (_type_): _description_
+        """        
         try  :
             try:
                 self.connection_pool.closeall()
@@ -82,3 +115,4 @@ class PostgresConnectionPool():
         except :
             self.pg_cp_logger.info('Unable to Close Connection pool as Postgres Connection pool is not initialised ')
         
+

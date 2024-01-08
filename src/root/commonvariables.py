@@ -1,5 +1,6 @@
 class CommonVariables () :
-
+    """_summary_
+    """
     # variables to store information of log level for each modules 
     thread_log_folder = str()
     etl_project_directory = str()

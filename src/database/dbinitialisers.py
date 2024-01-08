@@ -9,12 +9,20 @@ from database.postgresconnector import PostgresConnection
 
 
 class DatabaseInitialiser ():
+    """ 
+    The DbInitializer class serves as the determining class for databases. It establishes connections to all databases listed in the configurations.
+    """    
 
     def __init__(self, 
                 connectors_dict_list: list, 
                 log_obj:LoggingUtil, 
                 logger_filehandler):
-
+        """
+        Args:
+            connectors_dict_list (list): list of databses  needed to be established with connections 
+            log_obj (LoggingUtil): independent logging object to log activities in DBInitialiser class .
+            logger_filehandler (_type_): Log File were logs are writtern . 
+        """
         self.connections = list()
         self.connection_pools = dict()
         
@@ -51,6 +59,18 @@ class DatabaseInitialiser ():
                                 thread_logger_file, 
                                 log_obj:LoggingUtil, 
                                 table_name:str):
+        """
+          This method helps to initialise target database connection  which are listed  in table configuration file.
+        Args:
+            tgt_connection_name (str): target connection name mentioned in target table config file .
+            thread_logger (Logger): Logger object  used by the Specific thread while parallel processing. 
+            thread_logger_file (_type_):Logger file   used by the Specific thread while parallel processing.
+            log_obj (LoggingUtil): independent logging object to log activities in DBInitialiser class .
+            table_name (str): Target table name for logging purposes on which ETL is performed .
+
+        Returns:
+             A database connection Object
+        """        
 
         POSTGRESQL = CommonVariables.Postgres_Database
         postgres_log_level = ConfigParametersValue.postgres_connector_log_level
@@ -83,8 +103,16 @@ class DatabaseInitialiser ():
             return None     
 
     def release_connection(self,db_connection_obj):
-              db_connection_obj.release_connection()
+        """
+        Releases connection of the databses from a Connection pool. 
+        Args:
+         db_connection_obj (_type_): Databse Obj like postges obj or other database object ... on which the connection acquired from the connection poool is released.
+        """              
+        db_connection_obj.release_connection()
 
     def close_connections(self):
+        """
+        Closes the connection  pool of Databses .
+        """        
         for connection_name, connection_dict in self.connection_pools.items():
             connection_dict[JsonTagVariables.connection_pool].close_connection_pool(connection_name, '{}  has been closed !')
