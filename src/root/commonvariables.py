@@ -1,5 +1,5 @@
 class CommonVariables () :
-    """_summary_
+    """ Class defined to include all common variables which , is used all over the program .
     """
     # variables to store information of log level for each modules 
     thread_log_folder = str()

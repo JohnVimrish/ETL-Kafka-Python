@@ -13,6 +13,15 @@ from datetime import datetime as dt
 class Kafka_CDC_Consumer():
 
     def __init__(self, consumer_config: dict,ObjLogger,LogFile,exclude_topics: list = [], topic_md :dict = None ):
+        """Initialiser method to create a Kafka Consumer 
+
+        Args:
+            consumer_config (dict): Consumer connection configuration inputs 
+            ObjLogger (_type_): Logger Object 
+            LogFile (_type_): Log File in which logging are stored 
+            exclude_topics (list, optional): List of Topics that has to be excluded on fecthing messages from them . Defaults to [].
+            topic_md (dict, optional): Topics Medata . Defaults to None.
+        """        
 
         self.KafkaETLProcess    = ObjLogger.setup_logger(CommonVariables.kafka_connect_config,ConfigParametersValue.kafka_connect_log_level)
         ObjLogger.link_logger_filehandler(self.KafkaETLProcess,LogFile)
@@ -29,10 +38,17 @@ class Kafka_CDC_Consumer():
            self.ConsumerLoadStatus = CommonVariables.failed_load
         
     def __subscribe_to_all_topics(self):
+        """
+        Method to subscribe   alll topics with Kafka Bootstrap server
+        """        
         topics_to_subscribe = self.__init_kafka_topics()[1]
         self.kafka_consumer_client.subscribe(topics_to_subscribe)
 
     def __init_kafka_topics(self):
+        """Fetching list of Kafka Topics within Kakfa Bootstrap Server , and Collecting metadata of their topics, used for Admin Kafka Consumer 
+        Returns:
+            _type_: Topic metadata and list of topics available in Kafka Bootstrap Server .
+        """        
         consumer_topics  = list()
         topic_metadata   = dict ()
         for each_topic, topic_partition in self.kafka_consumer_client.list_topics().__dict__['topics'].items() :
@@ -41,24 +57,49 @@ class Kafka_CDC_Consumer():
         return topic_metadata,list(set(consumer_topics).difference(self.exclude_topics))
  
     def list_kafka_topics (self,) :
-          return self.__init_kafka_topics()
+        """
+        Listing all kafka topics available
+        Returns:
+            _type_: Topic metadata and list of topics available in Kafka Bootstrap Server .
+        """          
+        return self.__init_kafka_topics()
         
     def __subscribe_topic(self, topic):
-            
-            def reset_offset(consumer, partitions):
+        """
+        subscribes topic to consume messages from it .
+        Args:
+            topic (_type_):  topic name to subscribe on Kafka consumer.
+        """            
+        def reset_offset(consumer, partitions):
+                """
+                    Method helps to reset the offsets based on Load type (Full or Incremental )  , helps in fetching all messages from the topic  on repeated Full load
+                    type. 
+                Args:
+                    consumer (_type_): Kafka Consumer 
+                    partitions (_type_):  Partitions  of topics .
+                """                
                 for partition in partitions:
                     # set kafka.OFFSET_END to each partition if incremental load to extract from recent message which are not committed and set kafka.OFFSET_BEGINNING if FULL load 
                     partition.offset = kafka.OFFSET_BEGINNING  if self.load_type == CommonVariables.full_load_type else kafka.OFFSET_END
                 consumer.assign(partitions)
-            try :
-                  self.kafka_consumer_client.subscribe([topic],on_assign=reset_offset)
-            except kafka_error.KafkaError as error_message:
-                  self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error_message)
+                try :
+                    self.kafka_consumer_client.subscribe([topic],on_assign=reset_offset)
+                except kafka_error.KafkaError as error_message:
+                    self.KafkaETLProcess.error('Error  in Consumer Pipeline : ',error_message)
 
     def __process_messages_from_topics(self,batch_interval_seconds,kafka_message_wait_interval:int, poll_timeout:int,kafka_insert_batch_limit:int):
             
             def insert_data_to_var ( message,insert_list:list,delete_list:list) :
+                """Helps to convert kafka messages to suitable datatype , helping to be inserted in to database.
 
+                Args:
+                    message (_type_): message from kafka 
+                    insert_list (list):  insert data list variable 
+                    delete_list (list): delete  data list variable 
+
+                Returns:
+                    _type_: _description_
+                """
                 message = js.loads(message.decode('utf-8'))
                 message_operation =message['payload']['op']
                 if message_operation in ['i','r','u']: 
@@ -123,11 +164,24 @@ class Kafka_CDC_Consumer():
             return message_status
 
     def __partition_metadata(self, topic_name):
-       partition_metadata = [kafka.TopicPartition(topic_name,int(partition.__dict__['id'])) for partition in self.topic_metadata.get(topic_name)]
+        """Collects partition information of topic provided as input. 
+        Args:
+            topic_name (_type_): topic name to collect  partition information from .
+        """       
+        partition_metadata = [kafka.TopicPartition(topic_name,int(partition.__dict__['id'])) for partition in self.topic_metadata.get(topic_name)]
 
     def consume_messages(self, topic,batch_interval_seconds,load_type,DatabaseObj:dbinitialisers):
-        
+        """ This Method helps to consume messages from the topic and process them to Database based on target database metioned in Target Table configuration file . 
+        Args:
+            topic (_type_): Topic Name used for Processing messages from .
+            batch_interval_seconds (_type_):  Max batch  Interval seconds, to collect messages the topic and process to database.  
+            load_type (_type_):  Load type for processing the messages .
+            DatabaseObj (dbinitialisers): Databse Intialiser Object.
+        """        
         def assign_load_failed () :
+            """
+            Incase of any in between step failed , this helps to assign 'ConsumerLoadStatus' variable   value  as load failed to  interupt the program .
+            """            
             self.ConsumerLoadStatus = CommonVariables.failed_load  
             self.Database_Task_Executor.release_acquired_db_connection ()
         
@@ -171,4 +225,7 @@ class Kafka_CDC_Consumer():
         return self.ConsumerLoadStatus
 
     def close_consumer(self):
+        """
+        Closes Kafka consumer connection .
+        """        
         self.kafka_consumer_client.close()
