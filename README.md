@@ -20,15 +20,46 @@ This code is focused on creating Extract, Transform, Load (ETL) pipelines using 
 
 Key steps in the process might include:
 
+    Configure Debezium for Oracle Database
+         Follow the Debezium documentation to set up Debezium for Oracle: https://debezium.io/documentation/reference/2.4/connectors/oracle.html
     Debezium capturing changes in the Oracle Database and producing messages to Kafka topics.
     Python scripts consuming these Kafka messages, transforming them if necessary, and loading them into the Postgres Database.
     The Postgres Database serving as a staging area or a part of the Data Warehouse.
+
+WorkFLow Diagram :
+
+                                +---------------------+                  +------------------------+           
+                                |                     |                  |                        |           
+                                |    Kafka Server     |                  |   Debezium Connector   |          
+                                |                     |                  |     with Oracle DB     |          
+                                +---------------------+                  +------------------------+           
+                                        |                                         |                                  
+                                        |                                         |                                 
+                                        |                                         |                                  
+                                        v                                         v                                    
+                                +---------------------+                    +------------------------+     
+                                |                     | <----------------- |                        |     
+                                | Kafka Topic (Oracle)|   Kafka Topic      |    Debezium Change     |     
+                                |                     | -----------------> |    Data Capture (CDC)  |     
+                                +---------------------+                    |                        |     
+                                        |                                +------------------------+              
+                                        |                                                                        
+                                        |                                                                        
+                                        v                                                                       
+                                +-------------------------+              +--------------------------+            
+                                |                         |              |                          |               
+                                | Python ETL Script       |              |   PostgreSQL Database    |
+                                | (Extract and Transform  | ------------>|                          |
+                                |    Oracle Data )        |              |                          |
+                                |                         |              +--------------------------+                       
+                                +-------------------------+                                              
+
 
 ## Directory Structure
 
 ```
 /
-    README.md
+README.md
 config/
     configuration.json
     connection_parameters.json
@@ -37,6 +68,15 @@ config/
     ├── table_config/
         │  - employees.json
         │  - regions.json
+kafka_instructions /
+    codes_start_n_configure_kafkaanddebezium.txt
+    connect-standalone.properties
+    consumer.properties
+    consumer.properties
+    oracleconnector.properties
+    producer.properties
+    server.properties
+    zookeeper.properties
 log/
     ├── 202312202122/(sample log sturucture )
         │  - DESKTOP-TNM4E66ORA_CONNECTEMPLOYEES.log

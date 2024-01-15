@@ -1,0 +1,17 @@
+# Start Zookeeper (if it is not already running)
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+# Start Kafka
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+
+# Code to create topics 
+.\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --topic oracle_cdc_topic
+
+# To produce messages through the Kafka server via topics
+.\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic oracle_cdc_topic
+
+# To consume messages from the Kafka server via topics from its first offset (from the initial message)
+.\bin\windows\kafka-console-consumer.bat --topic test_topic --bootstrap-server localhost:9092 --from-beginning
+
+# To help Kafka connect to the Oracle Database configured with Debezium Connector 
+.\bin\windows\connect-standalone.bat .\config\connect-standalone.properties .\config\oracleconnector.properties
