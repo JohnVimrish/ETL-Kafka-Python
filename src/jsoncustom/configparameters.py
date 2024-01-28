@@ -3,7 +3,8 @@ from jsoncustom.jsonvalueextract import JsonValueExtractor
 from util.stringutil import StringUtility
 
 class ConfigParametersValue():
-    """_summary_
+    """ This class has the variables stored ith values which automatically derives the values from configuration json files used by the program . 
+        it is initialised on  beginning of the program  with all main config json files .
     """    
 
     @classmethod
@@ -11,13 +12,13 @@ class ConfigParametersValue():
                       dbconnection_config_obj,
                       log_config_obj,
                       kafka_config_obj):
-        """_summary_
+        """ Intialised with all configuration which are been initialised with json value extractor objects.
 
         Args:
-            main_config_obj (_type_): _description_
-            dbconnection_config_obj (_type_): _description_
-            log_config_obj (_type_): _description_
-            kafka_config_obj (_type_): _description_
+            main_config_obj (_type_): Main config file configured json value extractor object.
+            dbconnection_config_obj (_type_): database connection config file configured json value extractor object.
+            log_config_obj (_type_): log level config file configured json value extractor object.
+            kafka_config_obj (_type_): kafka config file configured json value extractor object.
         """
         cls.max_threads_count_process                       = main_config_obj.json_val(JsonTagVariables.max_threads_count_process)
         cls.load_type                                       = main_config_obj.json_val(JsonTagVariables.type_of_load_to_process)
@@ -56,15 +57,15 @@ class ConfigParametersValue():
         cls.kafka_insert_batch_number                       = kafka_config_obj.json_val(JsonTagVariables.kafka_insert_batch_number)
 
 class TableConfigParametersValue():
-    """_summary_
+    """ This class has the variables stored ith values which automatically derives the values from each table configuration json files used by  the program which has SQL queries present . THis class will be Inherited while processing each table in parallel processing .
+        it is initialised on  beginning of the program  with all main config json files .
     """
-    def __init__(self, table_config_path,ObjLogger,Logfile):
-        """_summary_
+    def __init__(self, table_config_path,Logfile):
+        """Intialised with table configuration which have been initialised with json value extractor objects.
 
         Args:
-            table_config_path (_type_): _description_
-            ObjLogger (_type_): _description_
-            Logfile (_type_): _description_
+            table_config_path (_type_): Table config file configured json value extractor object.
+            Logfile (_type_): Log file used on table level ,will be used will used ehile extraction values from Table Config with Json value Extractor class .
         """        
 
         self.ObjTableConfiguration                                   = JsonValueExtractor(table_config_path,Logfile,ConfigParametersValue.json_value_extc_log_level)

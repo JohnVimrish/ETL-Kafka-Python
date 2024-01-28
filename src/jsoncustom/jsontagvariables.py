@@ -1,5 +1,5 @@
 class JsonTagVariables():
-    """_summary_
+    """ A static class which has all json value tag dering variables.
     """
     # config file parameters
     max_threads_count_process='MAX_THREADS_PROCESS'
