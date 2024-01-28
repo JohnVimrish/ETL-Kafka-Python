@@ -13,13 +13,13 @@ class PostgresConnectionPool():
                  config_connect_vars: dict,
                  log_obj: LoggingUtil,
                  logger_file_handler):
-        """_summary_
+        """Initialiser method to setup this class.
 
         Args:
-            db_connector_name (_type_): _description_
-            config_connect_vars (dict): _description_
-            log_obj (LoggingUtil): _description_
-            logger_file_handler (_type_): _description_
+            db_connector_name (_type_): Database connection name for which connection pool is acquired .
+            config_connect_vars (dict): Database connection configration parameters.
+            log_obj (LoggingUtil): Logging Object .
+            logger_file_handler (_type_): logger on which file logging must be done on .
         """        
 
    
@@ -61,21 +61,20 @@ class PostgresConnectionPool():
                 db_connector_name, err), exc_info=True)
 
     def get_connection_pool(self):
-        """_summary_
-
+        """acquing connection pool for each connection mentioned in Database connection config. 
         Returns:
-            _type_: _description_
+            _type_: Connection pool for Connections .
         """        
         return self.connection_pool
 
     def log_pgdb_exception(self, err_msg_obj):
-        """_summary_
+        """ log postgres database execptions .
 
         Args:
-            err_msg_obj (_type_): _description_
+            err_msg_obj (_type_): error message dict pair with includes error message and pg codes . 
 
         Returns:
-            _type_: _description_
+            _type_: concatenation of error statements .
         """        
         # get details about the exception
         err_type, err_obj, traceback = sys.exc_info()
@@ -88,21 +87,21 @@ class PostgresConnectionPool():
         return str1 + str2
 
     def log_error(self, log_statement, error_message):
-        """_summary_
+        """ capturing the error message while firing the sql on the databases .
 
         Args:
-            log_statement (_type_): _description_
-            error_message (_type_): _description_
+            log_statement (_type_): log statement that will be appended with the error messages while logging.
+            error_message (_type_): error message that has to be logged. 
         """        
         self.pg_cp_logger.error(log_statement.format(
             self.log_pgdb_exception(error_message)), exc_info=True)
 
     def close_connection_pool(self, connection_name, log_message):
-        """_summary_
+        """close the connection pool acquired .
 
         Args:
-            connection_name (_type_): _description_
-            log_message (_type_): _description_
+            connection_name (_type_):  connection been enabled with connection pool.
+            log_message (_type_):  log message if failed to be logged.
         """        
         try  :
             try:

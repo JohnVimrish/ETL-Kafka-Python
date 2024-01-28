@@ -7,8 +7,7 @@ from psycopg2.extensions import register_adapter, AsIs
 import numpy as np
 
 class PostgresConnection():
-    """_summary_
-    """
+
     def __init__(self,
                  connection_pool: PostgresConnectionPool,
                  log_file_handler,
@@ -16,15 +15,14 @@ class PostgresConnection():
                  log_level,
                  table_name,
                  db_type):
-        """_summary_
-
+        """Initialiser method to setup this class.
         Args:
-            connection_pool (PostgresConnectionPool): _description_
-            log_file_handler (_type_): _description_
-            log_obj (LoggingUtil): _description_
-            log_level (_type_): _description_
-            table_name (_type_): _description_
-            db_type (_type_): _description_
+            connection_pool (PostgresConnectionPool): connection pool from which connection will be  acquired from .
+            log_file_handler (_type_):  logger on which file logging must be done on .
+            log_obj (LoggingUtil): Logging Object .
+            log_level (_type_): log level on which log message should be writtern on log files.
+            table_name (_type_): table name for hich database connection will be acquired for .
+            db_type (_type_): databse type whether postgres or oracle.
         """        
         self.connection_pool = connection_pool
         logger_name = db_type + '-' + table_name
@@ -34,7 +32,7 @@ class PostgresConnection():
         self.write_row_count = 0
 
     def acquire_connection(self):
-        """_summary_
+        """Acquire connection from connection pool .
         """        
         try:
             self.new_connection = self.connection_pool.getconn()
@@ -46,11 +44,11 @@ class PostgresConnection():
                 self.db_connector_name, error_message), exc_info=True)
 
     def log_and_close(self, log_statement, error_message):
-        """_summary_
+        """log error statements and  close connection.
 
         Args:
-            log_statement (_type_): _description_
-            error_message (_type_): _description_
+            log_statement (_type_): log error statements
+            error_message (_type_): error messages.
         """        
         critical_error = ['server closed the connection unexpectedly']
         pg_exception_result = self.log_pgdb_exception(error_message)
@@ -62,13 +60,13 @@ class PostgresConnection():
         self.cursor_object.close()
     
     def __remove_ascii_zero_char (rows) :
-        """_summary_
+        """replaces the ascii character from input array and returns transformed array .
 
         Args:
-            rows (_type_): _description_
+            rows (_type_):  input array 
 
         Returns:
-            _type_: _description_
+            _type_: replaces the ascii character from input array and returns transformed array .
         """        
         new_rows      = list()
         for row in  rows :
@@ -79,11 +77,11 @@ class PostgresConnection():
     def __upsert_data(self, 
                     write_inputs,
                     write_query):
-        """_summary_
+        """ upserting data to perform insert/update on target tables 
 
         Args:
-            write_inputs (_type_): _description_
-            write_query (_type_): _description_
+            write_inputs (_type_): input data array 
+            write_query (_type_): upsert query .
         """        
 
         self.pg_logger.debug(f'Upsert data  write starts at {dt.now()}')
@@ -102,11 +100,11 @@ class PostgresConnection():
     def upsert_data_in_batches(self,
                                 input_data,
                                 write_query):
-        """_summary_
+        """ upserting data to perform insert/update on target tables  in batches.
 
         Args:
-            input_data (_type_): _description_
-            write_query (_type_): _description_
+            write_inputs (_type_): input data array 
+            write_query (_type_): upsert query .
         """        
         try:
             try:
@@ -130,12 +128,12 @@ class PostgresConnection():
                 'Error occured in Method Execute_batch_results :{} .'.format(error), exc_info=True)
 
     def execute_sql(self, sql, error_message,query_argments = None):
-        """_summary_
+        """ direct single query executor.
 
         Args:
-            sql (_type_): _description_
-            error_message (_type_): _description_
-            query_argments (_type_, optional): _description_. Defaults to None.
+            sql 
+            error_message  
+            query_argments : Defaults to None.
         """        
         try:
             if self.new_connection == None:
@@ -145,49 +143,52 @@ class PostgresConnection():
             self.log_and_close(error_message, error)
     
     def get_full_write_records(self) :
-        """_summary_
+        """ fetchall that has been selected or executed recently 
 
         Returns:
-            _type_: _description_
+            _type_:  list of output from select or query executed recently 
         """        
         return self.cursor_object.fetchall()
 
     def get_full_write_row_count(self):
-        """_summary_
+        """fetch row count  that has been  executed recently 
 
         Returns:
-            _type_: _description_
+            _type_: fetch row count  that has been  executed recently 
         """        
         return self.write_row_count
     
     def get_full_records_asdict_list (self) :
-        """_summary_
+        """  fetchall that has been selected or executed recently  as form  of dictionary with column name and value pair.
 
         Returns:
-            _type_: _description_
+            _type_: fetchall that has been selected or executed recently  as form  of dictionary with column name and value pair.
         """        
         execution_query_description = self.cursor_object.description
         column_names = [column_name[0] for column_name in execution_query_description]
         return [dict(zip(column_names,each_row))   for each_row in self.get_full_write_records()]
 
     def get_curr_exec_rowcount(self):
-        """_summary_
+        """ return row count being affected on a table from a query being executed .
 
         Returns:
-            _type_: _description_
+            _type_: return row count being affected on a table from a query being executed .
+
         """        
         return self.cursor_object.rowcount
 
     def cursor_status(self):
-        """_summary_
+        """ returns databse cursor status whether in active mode or not .
 
         Returns:
-            _type_: _description_
+            _type_: returns databse cursor status whether in active mode or not .
+
         """        
         return self.cursor_object.closed
 
     def release_connection(self):
-        """_summary_
+        """release  the connection  acquired  from connection pool.
+
         """        
         try:
             self.connection_pool.putconn(self.new_connection, close=True)
@@ -196,13 +197,13 @@ class PostgresConnection():
                 'Unable to Close Connection , Error :{} .', error)
 
     def log_pgdb_exception(self, err_msg_obj):
-        """_summary_
+        """ log postgres database execptions .
 
         Args:
-            err_msg_obj (_type_): _description_
+            err_msg_obj (_type_): error message dict pair with includes error message and pg codes . 
 
         Returns:
-            _type_: _description_
+            _type_: concatenation of error statements .
         """        
         # get details about the exception
         err_type, err_obj, traceback = sys.exc_info()
